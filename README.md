@@ -4,7 +4,7 @@ Sherry小水 · 豆包工作校园课「简历这一课」配套网页。
 
 在线访问：https://xshuiai.github.io/be-seen/
 
-一叠 3D 屏幕，往下滚一块块翻到正面；点开每块屏幕，是这一站的讲解、现场实操和可以复制的豆包提示词。右上角可以开背景音乐、展示本页二维码。
+一叠 3D 屏幕，往下滚一块块翻到正面；点开每块屏幕，是这一站的讲解、现场实操和可以复制的豆包提示词。右上角可以开背景音乐，右下角可以展开本页二维码。
 
 - 作者：Sherry小水
 - 手写体「Sherry」「Be seen.」由 Great Vibes 字形转成矢量，遵循 SIL Open Font License 1.1（Copyright 2015 The Great Vibes Pro Project Authors，https://github.com/googlefonts/great-vibes），许可全文见 `OFL-GreatVibes.txt`。
