@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>让自己被看见 · Sherry小水</title>
+<!-- Sherry小水 · 豆包工作校园课 · 简历段网页（v2.0 电视机版，2026-11-03）。
+     一叠带厚度的 3D 屏幕，往下滚一块块翻到正面；点正面那块屏幕，它放大成全屏，里面是这一站的完整内容和交互。
+     右上角「音乐」开关：背景音乐用 Web Audio 实时合成（无音频文件、无版权问题）；翻屏、点开、收起、复制有音效。「扫码」按钮：默认隐藏，点开展示本页二维码（https://xshuiai.github.io/be-seen/）。
+     8 块：封面 → 01 我是谁 → 02 我的叙事 → 03 做出作品 → 04 展示出来 → 05 机会找到我 → 06 AI 时代 → 收尾。
+     单文件、无外部依赖、不联网也能打开（开源项目链接除外）。改前改后里的数字是示例。
+     手写体「Sherry」「Be seen.」是 Great Vibes 字形转成的矢量（SIL Open Font License 1.1，Copyright 2015 The Great Vibes Pro Project Authors，https://github.com/googlefonts/great-vibes）。 -->
+<style>
+:root{
+  --ink:#0e0e11;--ink2:#2a2a30;--sub:#6b6b74;--mute:#a4a4ac;--line:#ebebee;--soft:#f5f5f6;--paper:#fbfbfb;
+  --acc:#ff5b35;--mono:"SF Mono",Menlo,Consolas,monospace;--ease:cubic-bezier(.22,.8,.16,1);
+  --w:min(660px,86vw);--h:min(440px,56vh);--d:26px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.7}
+button{font-family:inherit;cursor:pointer;color:inherit}
+a{color:inherit}
+.mono{font-family:var(--mono);letter-spacing:.2em;text-transform:uppercase;font-size:10.5px}
+
+nav{position:fixed;left:0;right:0;top:0;z-index:40;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:18px 36px;pointer-events:none}
+nav>*{pointer-events:auto}
+.logo{display:flex;align-items:center;gap:6px;text-decoration:none}
+.logo svg{width:66px;height:30px;fill:var(--ink);margin-top:-4px}
+.logo b{font-size:14px;font-weight:900}
+.nlinks{display:flex;gap:22px}
+.nlinks a{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--mute);text-decoration:none;transition:color .3s}
+.nlinks a.on,.nlinks a:hover{color:var(--ink)}
+.pill{justify-self:end;font-family:var(--mono);font-size:10px;letter-spacing:.2em;border:1.5px solid var(--ink);border-radius:999px;padding:6px 14px;background:#fff}
+.cap{position:fixed;left:40px;bottom:40px;z-index:30;pointer-events:none}
+.cap .mono{color:var(--mute)}
+.cap b{display:block;font-size:17px;font-weight:700;margin-top:6px;letter-spacing:.01em}
+.open-hint{position:fixed;right:40px;bottom:40px;z-index:30;display:flex;align-items:center;gap:10px;color:var(--sub);font-size:12.5px;pointer-events:none;transition:opacity .4s}
+.open-hint i{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-style:normal;color:var(--ink);font-size:13px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.12)}}
+.dots{position:fixed;right:40px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:12px}
+.dots button{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#d9d9de;transition:.35s var(--ease)}
+.dots button.on{background:var(--ink);transform:scale(1.35)}
+.progress{position:fixed;left:0;top:0;height:2px;background:var(--ink);z-index:50;width:0}
+
+.track{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;perspective:1700px;perspective-origin:50% 18%;
+  background:radial-gradient(48% 46% at 50% 58%,#efeff1 0%,#f8f8f9 45%,#fff 78%)}
+.scr{position:absolute;left:50%;top:56%;width:var(--w);height:var(--h);margin:calc(var(--h) / -2) 0 0 calc(var(--w) / -2);transform-style:preserve-3d;will-change:transform,opacity}
+.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.fr{background:linear-gradient(180deg,#f5f5f7,#e7e7ea);box-shadow:inset 0 1px 0 #fff,0 10px 0 -2px #d4d4d9,0 11px 0 -2px #c4c4ca;padding:32px 18px 18px}
+.top,.bot{left:8px;right:8px;height:var(--d);border-radius:10px;background:linear-gradient(180deg,#fafafa,#dcdce0)}
+.top{top:0;transform-origin:50% 0;transform:rotateX(90deg)}
+.bot{top:auto;bottom:0;transform-origin:50% 100%;transform:rotateX(-90deg);background:linear-gradient(0deg,#f2f2f4,#d2d2d7)}
+.shadow{position:absolute;left:6%;right:6%;bottom:-40px;height:40px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.16),transparent);filter:blur(4px)}
+.wbar{position:absolute;left:20px;right:20px;top:11px;display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase}
+.wbar i{width:8px;height:8px;border-radius:50%;background:#ff5f57}.wbar i:nth-child(2){background:#febc2e}.wbar i:nth-child(3){background:#28c840;margin-right:8px}
+.wbar span{margin-left:auto;letter-spacing:.12em}
+.glass{position:relative;width:100%;height:100%;border-radius:9px;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05);cursor:zoom-in}
+.open{position:absolute;right:14px;bottom:14px;z-index:3;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.9);color:var(--ink);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;transform:translateY(6px);transition:.35s var(--ease);box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.dark .open{background:rgba(255,255,255,.12);color:#fff}
+.scr.front .open{opacity:.95;transform:none}
+.scr.front .glass:hover .open{background:var(--ink);color:#fff}
+
+.ui{position:absolute;inset:0;padding:30px 32px;display:flex;flex-direction:column}
+.ui .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--mute);text-transform:uppercase}
+.ui h3{margin:10px 0 8px;font-size:clamp(20px,2.6vw,28px);font-weight:800;letter-spacing:-.01em;line-height:1.25;position:relative}
+.ui h3 em{font-style:normal;color:var(--acc)}
+.ui p{margin:0;color:var(--sub);font-size:13px;line-height:1.7;max-width:420px;position:relative}
+.dark .glass{background:#0e0e11;color:#fff}
+.dark .ui p{color:#8d8d96}
+.blob{position:absolute;border-radius:50%;filter:blur(40px)}
+.mist .glass{background:linear-gradient(160deg,#bfc2c8,#8f949c 55%,#6f747c);color:#fff}
+.mist .ui p{color:rgba(255,255,255,.8)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chips span{font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.chips span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dark .chips span{background:transparent;border-color:#2c2c33;color:#c8c8cf}
+.dark .chips span.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.bubble{align-self:flex-end;max-width:78%;margin-top:auto;background:var(--soft);border-radius:14px 14px 4px 14px;padding:9px 12px;font-size:12px;line-height:1.6}
+.bubble b{color:var(--acc)}
+.reply{align-self:flex-start;max-width:78%;margin-top:8px;border:1px solid var(--line);border-radius:14px 14px 14px 4px;padding:9px 12px;font-size:12px;line-height:1.6;color:var(--sub)}
+.bignum{font-family:var(--mono);font-size:clamp(46px,7vw,72px);font-weight:700;letter-spacing:-.04em;line-height:1}
+.minibars{display:grid;gap:8px}
+.minibars div{display:grid;grid-template-columns:42px 1fr 46px;gap:8px;align-items:center;font-size:11px;color:var(--sub)}
+.minibars i{height:6px;border-radius:999px;background:var(--line);position:relative;overflow:hidden}
+.minibars i::after{content:"";position:absolute;inset:0;width:var(--v);background:var(--ink);border-radius:inherit}
+.minibars div:first-child i::after{background:var(--acc)}
+.radar{position:absolute;right:30px;top:50%;width:150px;height:150px;margin-top:-75px;border-radius:50%;border:1px solid #26262c}
+.radar::before{content:"";position:absolute;inset:30px;border-radius:50%;border:1px solid #26262c}
+.radar::after{content:"你";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--acc);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.radar i{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#e9e9ee;box-shadow:0 0 12px rgba(255,255,255,.6)}
+.radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,91,53,.3),transparent 25%);animation:sw 4s linear infinite}
+@keyframes sw{to{transform:rotate(360deg)}}
+.strike{font-size:13px;text-decoration:line-through;position:relative}
+.after{margin-top:6px;font-size:15px;font-weight:700;line-height:1.6;max-width:440px;position:relative}
+.repos{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.repos div{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11px;line-height:1.5}
+.repos b{display:block;font-size:12px}
+.repos span{font-family:var(--mono);color:var(--mute);font-size:10px}
+.sig-s{width:150px;height:52px;fill:var(--acc);margin:6px 0 0 -6px;transform:rotate(-6deg);position:relative}
+
+.veil{position:fixed;inset:0;z-index:60;background:rgba(245,245,247,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .45s}
+.veil.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:61;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 40px 120px -30px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.05);display:flex;flex-direction:column;
+  transition:top .6s var(--ease),left .6s var(--ease),width .6s var(--ease),height .6s var(--ease),border-radius .6s var(--ease),opacity .3s}
+.sbar{flex:none;display:flex;align-items:center;gap:7px;padding:13px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase}
+.sbar .tl{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:#ff5f57}
+.sbar .tl:nth-child(2){background:#febc2e}.sbar .tl:nth-child(3){background:#28c840;margin-right:10px}
+.sbar .close{margin-left:auto;border:0;background:var(--soft);border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink)}
+.sbody{flex:1;overflow:auto;opacity:0;transform:translateY(14px);transition:opacity .4s .2s,transform .5s .2s var(--ease);-webkit-overflow-scrolling:touch}
+.sheet.ready .sbody{opacity:1;transform:none}
+.doc{max-width:960px;margin:0 auto;padding:44px 40px 80px}
+.doc .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:var(--mute);text-transform:uppercase}
+.doc h2{margin:10px 0 10px;font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-.02em;line-height:1.2}
+.doc h2 em{font-style:normal;background:linear-gradient(transparent 64%,rgba(255,91,53,.3) 64%)}
+.doc .lead{color:var(--sub);font-size:16px;max-width:680px;margin:0}
+.blk{margin-top:44px}
+.blk>h4{display:flex;align-items:center;gap:12px;margin:0 0 14px;font-size:13px;font-weight:700}
+.blk>h4 span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mute);font-weight:500}
+.blk>h4::after{content:"";flex:1;height:1px;background:var(--line)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{position:relative;padding:14px 16px 14px 50px;border-radius:12px;background:var(--soft);font-size:14px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:16px;top:14px;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;display:flex;align-items:center;justify-content:center}
+.prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.pc{border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;background:#fff;transition:border-color .3s,transform .3s var(--ease)}
+.pc:hover{border-color:#d6d6db;transform:translateY(-2px)}
+.pc .ph{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--paper);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase}
+.pc .ph i{width:7px;height:7px;border-radius:50%;background:#e2e2e6}
+.pc .ph span{margin-left:auto;letter-spacing:.04em;text-transform:none;color:var(--ink);font-weight:700}
+.pc .pb{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.pc h5{margin:0;font-size:15px}
+.pc pre{margin:0;flex:1;font-family:inherit;font-size:13px;line-height:1.75;white-space:pre-wrap;color:var(--ink2)}
+.pc pre .ph2{color:var(--acc);font-weight:700}
+.cp{align-self:flex-start;border:0;background:var(--ink);color:#fff;border-radius:999px;padding:7px 14px;font-size:12px;font-weight:700;text-decoration:none;transition:.2s}
+.cp.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.cp.done{background:var(--acc)}
+.row2{display:flex;gap:8px;flex-wrap:wrap}
+.flips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.flip{perspective:900px;height:130px;border:0;background:none;padding:0;text-align:left}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .8s var(--ease);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .a,.flip .b{position:absolute;inset:0;border-radius:12px;padding:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:space-between}
+.flip .a{border:1px solid var(--line);background:#fff}
+.flip .a small,.flip .b small{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--mute)}
+.flip .a b{font-size:15px;line-height:1.45}
+.flip .b{transform:rotateY(180deg);background:var(--ink);color:#fff}
+.flip .b small{color:var(--acc)}
+.flip .b b{font-size:20px}
+.flip .b span{font-size:12px;color:#a9a9b2}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--soft);gap:2px;margin-bottom:18px}
+.seg button{border:0;background:none;padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--sub);transition:.3s}
+.seg button.on{background:var(--ink);color:#fff}
+.tell{font-size:clamp(17px,2vw,22px);line-height:1.8;font-weight:600;max-width:780px;transition:opacity .25s}
+.tell mark{background:linear-gradient(transparent 62%,rgba(255,91,53,.3) 62%);color:inherit}
+.tell.out{opacity:0}
+.who{font-size:12.5px;color:var(--mute);margin-bottom:6px}
+.ba{position:relative;height:200px;border-radius:14px;overflow:hidden;user-select:none;-webkit-user-select:none;border:1px solid var(--line)}
+.ba .s{position:absolute;inset:0;padding:26px 30px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.ba .s1{background:var(--paper)}
+.ba .s2{background:var(--ink);color:#fff;clip-path:inset(0 0 0 84%)}
+.ba .lb{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mute)}
+.ba .s2 .lb{color:var(--acc)}
+.ba .t{font-size:clamp(15px,1.9vw,20px);font-weight:700;max-width:620px;line-height:1.6}
+.ba .s1 .t{color:var(--mute);text-decoration:line-through}
+.ba .knob{position:absolute;top:0;bottom:0;left:84%;width:2px;background:var(--acc);pointer-events:none}
+.ba .knob::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900}
+.ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.note{font-size:12px;color:var(--mute);margin-top:8px}
+.forms{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.fm{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.fm b{font-size:15px}
+.fm small{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--mute)}
+.fm span{font-size:12.5px;color:var(--sub);flex:1}
+.fm .lv{display:flex;gap:3px;margin-top:4px}.fm .lv i{width:14px;height:4px;border-radius:2px;background:var(--line)}.fm .lv i.on{background:var(--ink)}
+.filter{display:flex;gap:6px;margin-bottom:12px}
+.filter button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--sub)}
+.filter button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.oss{border-top:1px solid var(--line)}
+.oss a{display:grid;grid-template-columns:70px 1.1fr 2fr 80px;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);text-decoration:none;transition:background .2s}
+.oss a:hover{background:var(--paper)}
+.oss .u{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--mute)}
+.oss b{font-size:14.5px}
+.oss p{margin:0;font-size:13px;color:var(--sub)}
+.oss .st{font-family:var(--mono);font-size:12px;text-align:right}
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:clamp(17px,2.2vw,22px);font-weight:800}
+.formula span{padding:6px 14px;border-radius:999px;background:var(--soft)}
+.formula span.hl{background:var(--ink);color:#fff}
+.formula i{font-style:normal;font-family:var(--mono);color:var(--mute)}
+.whomap{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;margin-top:20px}
+.orbit{position:relative;aspect-ratio:1/1;max-width:380px;width:100%;margin:0 auto;border-radius:50%;border:1px solid var(--line)}
+.orbit::before{content:"";position:absolute;inset:22%;border-radius:50%;border:1px solid var(--line)}
+.orbit .me{position:absolute;left:50%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px;border-radius:50%;background:var(--acc);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 10px rgba(255,91,53,.12)}
+.orbit button{position:absolute;transform:translate(-50%,-50%);border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;white-space:nowrap;transition:.3s var(--ease)}
+.orbit button.on{background:var(--ink);border-color:var(--ink);color:#fff;transform:translate(-50%,-50%) scale(1.08)}
+.detail{border:1px solid var(--line);border-radius:14px;padding:22px;min-height:220px;transition:opacity .25s}
+.detail.out{opacity:0}
+.detail small{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mute)}
+.detail h5{margin:6px 0 6px;font-size:22px}
+.detail p{margin:0 0 6px;color:var(--sub);font-size:14px}
+.detail .first{margin-top:14px;padding:11px 13px;border-radius:10px;background:var(--soft);font-size:13.5px;font-weight:700}
+.detail .first::before{content:"这周第一步 → ";color:var(--acc)}
+.abil{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--ink)}
+.abil div{padding:16px 14px 18px;border-right:1px solid var(--line)}
+.abil div:last-child{border-right:0}
+.abil i{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--acc);letter-spacing:.14em}
+.abil b{display:block;font-size:17px;margin:6px 0 4px}
+.abil span{font-size:12.5px;color:var(--sub)}
+.charts{display:grid;grid-template-columns:1fr 1.4fr;gap:12px}
+.chart{border:1px solid var(--line);border-radius:14px;padding:20px}
+.chart h5{margin:0;font-size:15px}
+.chart .c2{margin:2px 0 14px;font-size:12px;color:var(--mute)}
+.donut{display:flex;align-items:center;gap:18px}
+.donut svg{width:120px;height:120px;flex:none}
+.donut .arc{transition:stroke-dashoffset 1.6s var(--ease)}
+.donut p{margin:0;font-size:13.5px;color:var(--sub)}
+.bars .r{display:grid;grid-template-columns:52px 1fr 64px;gap:10px;align-items:center;margin:12px 0;font-size:13px}
+.bars .tk{height:10px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bars .fl{height:100%;width:0;border-radius:999px;background:var(--ink);transition:width 1.6s var(--ease)}
+.bars .r:first-child .fl{background:var(--acc)}
+.bars b{font-family:var(--mono);font-size:12.5px;text-align:right}
+.skills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.skills span{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid var(--line)}
+.skills span.hot{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stat{display:flex;align-items:baseline;gap:20px;flex-wrap:wrap}
+.stat .n{font-family:var(--mono);font-size:clamp(56px,8vw,96px);font-weight:700;letter-spacing:-.05em;line-height:1}
+.stat .n small{font-family:inherit;font-size:.28em;letter-spacing:0;color:var(--acc);margin-left:4px}
+.stat p{margin:0;color:var(--sub);max-width:420px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13.5px}
+.flow span{padding:6px 12px;border-radius:999px;background:var(--soft);font-weight:700}
+.flow em{font-style:normal;color:var(--mute)}
+.label{max-width:400px;border:2px solid var(--ink);border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.65}
+.label h5{margin:0 0 6px;font-size:16px;border-bottom:4px solid var(--ink);padding-bottom:4px;display:flex;justify-content:space-between;align-items:baseline}
+.label h5 small{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--mute)}
+.label table{width:100%;border-collapse:collapse;margin:6px 0}
+.label td{padding:3px 0;border-bottom:1px solid var(--line)}
+.label td:last-child{text-align:right;font-family:var(--mono);font-weight:700}
+.label .w{margin-top:8px;padding:7px 9px;border-radius:6px;background:var(--ink);color:#fff;font-size:12px}
+.endq{font-size:clamp(26px,3.6vw,40px);font-weight:900;line-height:1.35;letter-spacing:-.01em;margin:6px 0 26px}
+.endq em{font-style:normal;color:var(--acc)}
+.signoff{display:flex;align-items:center;gap:6px;margin-top:24px}
+.signoff svg{width:120px;height:52px;fill:var(--ink);transform:rotate(-5deg)}
+.signoff b{font-size:20px;font-weight:900;margin-top:8px}
+.src{font-size:11.5px;color:var(--mute);margin-top:30px}
+.src a{color:var(--mute)}
+
+
+/* ---------- 顶栏按钮：音乐 / 二维码 ---------- */
+.tools{justify-self:end;display:flex;gap:8px}
+.tbtn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:.25s}
+.tbtn:hover,.tbtn.on{background:var(--ink);color:#fff}
+.eq{display:inline-flex;align-items:flex-end;gap:2px;height:10px;font-style:normal}
+.eq b{width:2px;height:3px;background:currentColor;border-radius:1px}
+.tbtn.on .eq b{animation:eq .9s ease-in-out infinite}
+.tbtn.on .eq b:nth-child(2){animation-delay:.2s}.tbtn.on .eq b:nth-child(3){animation-delay:.4s}
+@keyframes eq{50%{height:10px}}
+.qrwrap{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;background:rgba(245,245,247,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .4s}
+.qrwrap.on{opacity:1;pointer-events:auto}
+.qrcard{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px 34px 26px;border-radius:22px;background:#fff;box-shadow:0 40px 100px -30px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.05);transform:translateY(16px) scale(.96);transition:transform .5s var(--ease)}
+.qrwrap.on .qrcard{transform:none}
+.qrcard .mono{color:var(--mute)}
+.qrbox{width:min(300px,64vw);aspect-ratio:1/1;padding:14px;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line)}
+.qrbox svg{display:block;width:100%;height:100%}
+.qrcard b{font-size:18px}
+.qrcard span{font-family:var(--mono);font-size:11px;color:var(--sub);letter-spacing:.06em}
+.qrcard .pill{cursor:pointer;margin-top:4px}
+@media (max-width:820px){.tools .tbtn span{display:none}}
+@media (max-width:820px){
+  nav{grid-template-columns:1fr auto;padding:14px 16px}
+  .nlinks{display:none}
+  .cap{left:18px;bottom:22px}
+  .open-hint{right:16px;bottom:22px}
+  .open-hint span{display:none}
+  .dots{right:10px}
+  :root{--w:86vw;--h:min(430px,54vh);--d:18px}
+  .ui{padding:24px 22px}
+  .radar{width:100px;height:100px;margin-top:-50px;right:14px;top:62%}
+  .repos{grid-template-columns:1fr 1fr}.repos div:nth-child(3){display:none}
+  .doc{padding:30px 18px 70px}
+  .flips{grid-template-columns:repeat(2,1fr)}
+  .forms{grid-template-columns:repeat(2,1fr)}
+  .oss a{grid-template-columns:1fr 60px}.oss .u,.oss p{display:none}
+  .whomap{grid-template-columns:1fr}
+  .abil{grid-template-columns:1fr 1fr}.abil div{border-bottom:1px solid var(--line)}
+  .charts{grid-template-columns:1fr}
+  .seg{display:flex;width:100%}.seg button{flex:1;padding:8px 4px;font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="sherry" viewBox="40 25 2456 1152"><path d="M413 943Q315 943 233.5 914.0Q152 885 102.0 828.5Q52 772 47 689Q45 655 58.0 614.0Q71 573 94.5 532.5Q118 492 150.5 459.5Q183 427 220 410Q223 408 229.5 407.0Q236 406 239 406Q245 406 245 409Q245 414 230 425Q188 458 161 501Q133 544 119.0 593.0Q105 642 105 692Q105 751 130.5 793.5Q156 836 199.0 863.5Q242 891 297.0 904.0Q352 917 412 917Q479 917 544.5 902.0Q610 887 664 859Q747 815 795.5 750.0Q844 685 844 621Q844 587 829.5 556.0Q815 525 783 500Q759 481 724.5 464.0Q690 447 651.5 431.0Q613 415 576.0 398.5Q539 382 511 363Q471 336 452.5 305.0Q434 274 434 243Q434 206 455.5 171.0Q477 136 514.5 107.5Q552 79 599 63Q640 49 688.5 41.0Q737 33 784 33Q823 33 858.5 38.5Q894 44 921 58Q955 74 973.0 100.5Q991 127 991 156Q991 196 955 226Q942 236 926.0 244.5Q910 253 888 259Q884 260 879 260Q867 260 867 253Q867 249 873.5 244.5Q880 240 893 239Q923 235 938.5 216.0Q954 197 954 172Q954 146 936.5 120.5Q919 95 883.0 77.5Q847 60 791 60Q759 60 720.5 67.0Q682 74 637 90Q582 109 545.5 146.0Q509 183 509 225Q509 251 526.5 277.5Q544 304 583 328Q616 348 658.0 367.5Q700 387 743.0 406.5Q786 426 821 448Q876 482 900.0 521.0Q924 560 924 601Q924 649 895.5 697.5Q867 746 821.0 788.5Q775 831 720 864Q656 902 575.5 922.5Q495 943 413 943ZM888 859Q930 773 975.5 678.5Q1021 584 1069.0 488.0Q1117 392 1164 305Q1181 275 1195.5 258.0Q1210 241 1234 241Q1243 241 1255.0 244.0Q1267 247 1278 245Q1265 259 1242.5 294.0Q1220 329 1192.5 378.0Q1165 427 1134.5 483.5Q1104 540 1074.5 597.5Q1045 655 1020 705Q1040 679 1061.0 656.0Q1082 633 1102 616Q1124 596 1157.5 574.0Q1191 552 1224.5 536.0Q1258 520 1278 520Q1285 520 1288 521Q1288 521 1277.0 541.0Q1266 561 1249.5 592.0Q1233 623 1215.5 659.0Q1198 695 1185.0 727.5Q1172 760 1168 781Q1165 797 1165 808Q1165 824 1171.0 829.5Q1177 835 1184 835Q1201 835 1220.5 817.5Q1240 800 1259.0 773.0Q1278 746 1294.5 715.5Q1311 685 1321 658Q1333 658 1333 667Q1322 694 1305.5 726.5Q1289 759 1268.0 788.0Q1247 817 1222.0 836.0Q1197 855 1169 855Q1149 855 1128.0 841.0Q1107 827 1107 790Q1107 779 1109.0 766.5Q1111 754 1116 738Q1122 718 1136.0 693.5Q1150 669 1172 632Q1182 615 1182 605Q1182 593 1170 593Q1160 593 1143.0 603.0Q1126 613 1100 638Q1075 662 1038.0 708.0Q1001 754 959 837Q952 850 943.5 850.5Q935 851 921 852Q912 853 903.0 853.5Q894 854 888 859ZM1393 855Q1356 855 1326.5 831.0Q1297 807 1297 758Q1297 717 1315.5 671.0Q1334 625 1364.5 584.5Q1395 544 1432.5 518.5Q1470 493 1508 493Q1527 493 1545.0 504.0Q1563 515 1563 542Q1563 567 1544.0 597.0Q1525 627 1490 653Q1475 664 1452.0 674.0Q1429 684 1406.0 690.5Q1383 697 1368 697Q1363 709 1358.5 729.0Q1354 749 1354 770Q1354 795 1364.0 815.0Q1374 835 1401 835Q1434 835 1462.5 816.0Q1491 797 1513.5 768.0Q1536 739 1552.0 709.0Q1568 679 1577 658Q1589 658 1589 667Q1576 695 1559.5 728.0Q1543 761 1520.5 789.5Q1498 818 1466.5 836.5Q1435 855 1393 855ZM1375 679Q1389 679 1422.0 668.5Q1455 658 1482 635Q1508 612 1522.0 584.5Q1536 557 1536 538Q1536 516 1520 516Q1508 516 1487.0 532.0Q1466 548 1435 586Q1416 610 1399.0 638.0Q1382 666 1375 679ZM1578 655Q1586 638 1599.0 600.5Q1612 563 1626.0 517.0Q1640 471 1647 430Q1650 414 1658.0 406.5Q1666 399 1675 399Q1688 399 1699.0 411.5Q1710 424 1710 447Q1710 475 1693.5 495.0Q1677 515 1653 533Q1663 534 1674.0 534.5Q1685 535 1698 535Q1745 535 1791 529Q1793 535 1793 538Q1793 551 1785.5 571.0Q1778 591 1770 607Q1766 616 1754.0 639.5Q1742 663 1728.0 692.5Q1714 722 1704.5 750.5Q1695 779 1695 799Q1695 825 1715 825Q1734 825 1768.0 780.5Q1802 736 1836 658Q1848 658 1848 667Q1837 694 1820.5 726.0Q1804 758 1784.0 786.5Q1764 815 1741.0 833.5Q1718 852 1693 852Q1674 852 1655.0 836.5Q1636 821 1636 786Q1636 755 1648.0 725.5Q1660 696 1675.0 670.0Q1690 644 1702.0 624.0Q1714 604 1714 592Q1714 574 1691.5 566.0Q1669 558 1633 557Q1615 603 1606.0 625.0Q1597 647 1589 667Q1573 667 1578 655ZM1837 655Q1845 638 1858.0 600.5Q1871 563 1885.0 517.0Q1899 471 1906 430Q1909 414 1917.0 406.5Q1925 399 1934 399Q1947 399 1958.0 411.5Q1969 424 1969 447Q1969 475 1952.5 495.0Q1936 515 1912 533Q1922 534 1933.0 534.5Q1944 535 1957 535Q2004 535 2050 529Q2052 535 2052 538Q2052 551 2044.5 571.0Q2037 591 2029 607Q2025 616 2013.0 639.5Q2001 663 1987.0 692.5Q1973 722 1963.5 750.5Q1954 779 1954 799Q1954 825 1974 825Q1993 825 2027.0 780.5Q2061 736 2095 658Q2107 658 2107 667Q2096 694 2079.5 726.0Q2063 758 2043.0 786.5Q2023 815 2000.0 833.5Q1977 852 1952 852Q1933 852 1914.0 836.5Q1895 821 1895 786Q1895 755 1907.0 725.5Q1919 696 1934.0 670.0Q1949 644 1961.0 624.0Q1973 604 1973 592Q1973 574 1950.5 566.0Q1928 558 1892 557Q1874 603 1865.0 625.0Q1856 647 1848 667Q1832 667 1837 655ZM1957 1170Q1905 1170 1883.0 1149.5Q1861 1129 1861 1101Q1861 1058 1892.5 1021.5Q1924 985 1970 963Q2022 939 2088.5 924.0Q2155 909 2216 891Q2235 858 2251.0 815.5Q2267 773 2280.0 732.5Q2293 692 2301 666Q2289 688 2270.5 719.5Q2252 751 2229.0 781.0Q2206 811 2179.5 831.0Q2153 851 2124 851Q2113 851 2097.5 846.0Q2082 841 2070.5 827.5Q2059 814 2059 787Q2059 761 2075.0 729.5Q2091 698 2107 667Q2102 667 2098.5 666.0Q2095 665 2095 658Q2098 652 2107.0 632.0Q2116 612 2127.5 588.0Q2139 564 2148 546Q2159 523 2172.5 514.0Q2186 505 2199 505H2261Q2254 511 2243.5 518.5Q2233 526 2224 541Q2197 587 2177.0 629.5Q2157 672 2134 720Q2123 743 2118.0 762.0Q2113 781 2113 795Q2113 828 2135 828Q2159 828 2193 789Q2221 756 2249.5 710.5Q2278 665 2304.5 616.5Q2331 568 2351 527Q2362 505 2390 505H2445Q2416 525 2400.5 557.0Q2385 589 2366 639Q2345 694 2326.0 753.0Q2307 812 2284 874Q2333 857 2366.0 830.0Q2399 803 2424.5 760.5Q2450 718 2476 658Q2488 658 2488 667Q2466 713 2448.0 748.0Q2430 783 2408.0 809.5Q2386 836 2353.0 858.5Q2320 881 2268 902Q2244 945 2213.5 991.5Q2183 1038 2144.5 1078.5Q2106 1119 2059.5 1144.5Q2013 1170 1957 1170ZM1933 1150Q1966 1150 2001.0 1130.0Q2036 1110 2069.0 1079.5Q2102 1049 2129.5 1017.5Q2157 986 2174 962Q2179 955 2185.0 944.0Q2191 933 2197 923Q2148 936 2089.5 951.5Q2031 967 1988 986Q1940 1006 1912.5 1043.0Q1885 1080 1885 1109Q1885 1127 1896.5 1138.5Q1908 1150 1933 1150Z"/></symbol><symbol id="beseen" viewBox="4 55 2750 842"><path d="M178 890Q156 890 127.5 885.5Q99 881 72.5 870.0Q46 859 28.5 838.5Q11 818 11 787Q11 750 44.0 719.5Q77 689 137 689Q181 689 219.0 703.5Q257 718 293.5 738.5Q330 759 369 779Q419 731 460.5 660.0Q502 589 543.5 507.5Q585 426 633.5 344.0Q682 262 746 190L804 125Q767 119 727.0 115.5Q687 112 644 112Q585 112 515.5 122.0Q446 132 377.5 153.0Q309 174 252.5 206.0Q196 238 162.0 282.0Q128 326 128 383Q128 422 145.5 445.0Q163 468 189.5 478.5Q216 489 243 489Q288 489 319.0 468.5Q350 448 365.5 421.0Q381 394 381 373Q381 366 391 366Q401 366 401 382Q401 423 376.0 453.0Q351 483 313.5 499.0Q276 515 238 515Q203 515 166.5 498.0Q130 481 106.0 447.0Q82 413 82 363Q82 303 116.0 256.5Q150 210 207.0 177.0Q264 144 334.0 122.5Q404 101 475.5 91.0Q547 81 610 81Q668 81 723.5 86.5Q779 92 828 103Q842 91 856.5 82.0Q871 73 883 68Q894 63 901 63Q909 63 909 69Q909 72 898 80Q885 90 875.5 98.5Q866 107 864 111Q966 137 1029.5 182.5Q1093 228 1093 290Q1093 341 1058.0 379.5Q1023 418 966.5 440.0Q910 462 846 465Q936 494 989.5 540.0Q1043 586 1043 657Q1043 710 1012.5 753.0Q982 796 931.5 826.5Q881 857 821.0 873.5Q761 890 702 890Q609 890 537.5 871.0Q466 852 389 817Q292 890 178 890ZM688 861Q750 861 801.0 842.0Q852 823 889.5 792.0Q927 761 947.5 723.0Q968 685 968 648Q968 613 947.0 580.5Q926 548 881 526Q823 497 779.0 485.5Q735 474 709 464Q699 459 696.0 457.0Q693 455 693 453Q693 443 703.0 437.0Q713 431 726 431Q746 431 769.0 434.0Q792 437 818 437Q883 437 930.0 411.0Q977 385 1002.5 346.0Q1028 307 1028 269Q1028 226 990.0 193.5Q952 161 852 135Q802 204 752.0 289.5Q702 375 652.0 462.5Q602 550 551.0 628.0Q500 706 449 762Q437 775 430.0 781.5Q423 788 411 799Q471 824 543.0 842.5Q615 861 688 861ZM158 859Q214 862 260.5 845.5Q307 829 347 799Q323 787 286.0 768.0Q249 749 211.0 734.5Q173 720 145 720Q108 720 89.0 739.5Q70 759 70 784Q70 810 92.0 833.5Q114 857 158 859ZM1178 855Q1141 855 1111.5 831.0Q1082 807 1082 758Q1082 717 1100.5 671.0Q1119 625 1149.5 584.5Q1180 544 1217.5 518.5Q1255 493 1293 493Q1312 493 1330.0 504.0Q1348 515 1348 542Q1348 567 1329.0 597.0Q1310 627 1275 653Q1260 664 1237.0 674.0Q1214 684 1191.0 690.5Q1168 697 1153 697Q1148 709 1143.5 729.0Q1139 749 1139 770Q1139 795 1149.0 815.0Q1159 835 1186 835Q1219 835 1247.5 816.0Q1276 797 1298.5 768.0Q1321 739 1337.0 709.0Q1353 679 1362 658Q1374 658 1374 667Q1361 695 1344.5 728.0Q1328 761 1305.5 789.5Q1283 818 1251.5 836.5Q1220 855 1178 855ZM1160 679Q1174 679 1207.0 668.5Q1240 658 1267 635Q1293 612 1307.0 584.5Q1321 557 1321 538Q1321 516 1305 516Q1293 516 1272.0 532.0Q1251 548 1220 586Q1201 610 1184.0 638.0Q1167 666 1160 679ZM1554 855Q1513 855 1487.5 829.5Q1462 804 1462 776Q1462 753 1473.5 733.5Q1485 714 1504 714L1505 712Q1527 672 1547.5 630.5Q1568 589 1593 542Q1614 503 1638.5 478.0Q1663 453 1696 453Q1704 453 1718.0 456.5Q1732 460 1732 471Q1732 479 1723 479Q1716 479 1707.5 475.0Q1699 471 1694 471Q1675 471 1662.0 493.0Q1649 515 1649 540Q1649 567 1658.0 588.5Q1667 610 1679.0 630.0Q1691 650 1700.0 670.5Q1709 691 1709 715Q1709 763 1690.5 792.5Q1672 822 1642 837H1643Q1696 837 1730.5 787.5Q1765 738 1799 658Q1811 658 1811 667Q1792 712 1769.0 755.0Q1746 798 1715.0 826.0Q1684 854 1639 854Q1620 854 1604 850Q1581 855 1554 855ZM1539 749Q1539 773 1550.0 795.0Q1561 817 1590 828Q1616 813 1630.5 781.5Q1645 750 1645 716Q1645 688 1639.0 659.0Q1633 630 1626.5 602.0Q1620 574 1620 552Q1620 545 1620.5 539.5Q1621 534 1622 529Q1604 556 1585.5 592.0Q1567 628 1550.0 661.0Q1533 694 1519 715Q1539 718 1539 749ZM1506 799Q1506 815 1517.0 827.0Q1528 839 1550 839Q1560 839 1569 837Q1548 824 1535.5 804.0Q1523 784 1523 758Q1514 768 1510.0 778.5Q1506 789 1506 799ZM1872 855Q1835 855 1805.5 831.0Q1776 807 1776 758Q1776 717 1794.5 671.0Q1813 625 1843.5 584.5Q1874 544 1911.5 518.5Q1949 493 1987 493Q2006 493 2024.0 504.0Q2042 515 2042 542Q2042 567 2023.0 597.0Q2004 627 1969 653Q1954 664 1931.0 674.0Q1908 684 1885.0 690.5Q1862 697 1847 697Q1842 709 1837.5 729.0Q1833 749 1833 770Q1833 795 1843.0 815.0Q1853 835 1880 835Q1913 835 1941.5 816.0Q1970 797 1992.5 768.0Q2015 739 2031.0 709.0Q2047 679 2056 658Q2068 658 2068 667Q2055 695 2038.5 728.0Q2022 761 1999.5 789.5Q1977 818 1945.5 836.5Q1914 855 1872 855ZM1854 679Q1868 679 1901.0 668.5Q1934 658 1961 635Q1987 612 2001.0 584.5Q2015 557 2015 538Q2015 516 1999 516Q1987 516 1966.0 532.0Q1945 548 1914 586Q1895 610 1878.0 638.0Q1861 666 1854 679ZM2128 855Q2091 855 2061.5 831.0Q2032 807 2032 758Q2032 717 2050.5 671.0Q2069 625 2099.5 584.5Q2130 544 2167.5 518.5Q2205 493 2243 493Q2262 493 2280.0 504.0Q2298 515 2298 542Q2298 567 2279.0 597.0Q2260 627 2225 653Q2210 664 2187.0 674.0Q2164 684 2141.0 690.5Q2118 697 2103 697Q2098 709 2093.5 729.0Q2089 749 2089 770Q2089 795 2099.0 815.0Q2109 835 2136 835Q2169 835 2197.5 816.0Q2226 797 2248.5 768.0Q2271 739 2287.0 709.0Q2303 679 2312 658Q2324 658 2324 667Q2311 695 2294.5 728.0Q2278 761 2255.5 789.5Q2233 818 2201.5 836.5Q2170 855 2128 855ZM2110 679Q2124 679 2157.0 668.5Q2190 658 2217 635Q2243 612 2257.0 584.5Q2271 557 2271 538Q2271 516 2255 516Q2243 516 2222.0 532.0Q2201 548 2170 586Q2151 610 2134.0 638.0Q2117 666 2110 679ZM2216 859Q2252 786 2285.0 714.5Q2318 643 2353 578Q2373 542 2387.0 527.5Q2401 513 2424 513Q2432 513 2441.0 515.5Q2450 518 2459 518Q2465 518 2468 517Q2454 525 2431.5 556.5Q2409 588 2386.0 629.0Q2363 670 2345 706Q2364 683 2385.0 660.0Q2406 637 2431 616Q2455 595 2488.5 572.5Q2522 550 2554.0 535.0Q2586 520 2605 520Q2612 520 2615 521Q2615 521 2604.0 540.5Q2593 560 2576.5 591.5Q2560 623 2543.0 658.5Q2526 694 2512.5 726.5Q2499 759 2495 781Q2492 794 2492 805Q2492 821 2498.0 826.0Q2504 831 2511 831Q2530 831 2550.0 814.0Q2570 797 2588.5 770.5Q2607 744 2623.0 714.0Q2639 684 2650 658Q2662 658 2662 667Q2651 694 2634.5 726.5Q2618 759 2597.5 788.0Q2577 817 2552.0 836.0Q2527 855 2498 855Q2478 855 2456.5 841.0Q2435 827 2435 789Q2435 778 2437.0 765.5Q2439 753 2444 738Q2452 718 2463.0 695.0Q2474 672 2499 632Q2506 621 2507.5 615.0Q2509 609 2509 605Q2509 593 2498 593Q2489 593 2471.5 603.0Q2454 613 2428 638Q2403 662 2368.5 706.0Q2334 750 2289 836Q2282 849 2273.5 850.0Q2265 851 2250 852Q2240 853 2231.0 853.5Q2222 854 2216 859ZM2697 866Q2681 866 2671.0 856.0Q2661 846 2661 831Q2661 811 2676.5 797.0Q2692 783 2710 783Q2726 783 2736.0 792.5Q2746 802 2746 817Q2746 836 2731.0 851.0Q2716 866 2697 866Z"/></symbol></defs></svg>
+<div class="progress" id="progress"></div>
+<nav>
+  <a class="logo" href="#" id="home"><svg aria-label="Sherry"><use href="#sherry"/></svg><b>小水</b></a>
+  <div class="nlinks" id="nlinks"></div>
+  <div class="tools"><button class="pill tbtn" id="bgmBtn" aria-pressed="false"><i class="eq"><b></b><b></b><b></b></i><span>音乐</span></button><button class="pill tbtn" id="qrBtn">扫码 ▦</button></div>
+</nav>
+<div class="qrwrap" id="qrwrap" aria-hidden="true"><div class="qrcard"><div class="mono">SCAN · 扫码打开同款网页</div><div class="qrbox"><svg viewBox="0 0 29 29" shape-rendering="crispEdges" aria-label="二维码：https://xshuiai.github.io/be-seen/"><path d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM12 0h1v1h-1zM13 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM22 0h1v1h-1zM23 0h1v1h-1zM24 0h1v1h-1zM25 0h1v1h-1zM26 0h1v1h-1zM27 0h1v1h-1zM28 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM10 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM18 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM9 2h1v1h-1zM13 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM9 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM25 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM19 5h1v1h-1zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM24 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM17 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM0 8h1v1h-1zM3 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM8 8h1v1h-1zM9 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM2 9h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM15 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM25 9h1v1h-1zM28 9h1v1h-1zM1 10h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM26 10h1v1h-1zM27 10h1v1h-1zM0 11h1v1h-1zM3 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM0 12h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM27 12h1v1h-1zM28 12h1v1h-1zM0 13h1v1h-1zM1 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM10 13h1v1h-1zM12 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM0 14h1v1h-1zM1 14h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM9 14h1v1h-1zM12 14h1v1h-1zM16 14h1v1h-1zM22 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM26 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM1 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM7 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM23 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM0 16h1v1h-1zM1 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h1v1h-1zM27 16h1v1h-1zM2 17h1v1h-1zM3 17h1v1h-1zM7 17h1v1h-1zM8 17h1v1h-1zM9 17h1v1h-1zM16 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM25 17h1v1h-1zM28 17h1v1h-1zM0 18h1v1h-1zM3 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM23 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM2 19h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 19h1v1h-1zM17 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM27 19h1v1h-1zM28 19h1v1h-1zM0 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM14 20h1v1h-1zM16 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM26 20h1v1h-1zM8 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM17 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM28 21h1v1h-1zM0 22h1v1h-1zM1 22h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM16 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM24 22h1v1h-1zM27 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM20 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM0 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM23 24h1v1h-1zM24 24h1v1h-1zM28 24h1v1h-1zM0 25h1v1h-1zM2 25h1v1h-1zM3 25h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM8 25h1v1h-1zM10 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM14 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM24 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM0 26h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM13 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM9 27h1v1h-1zM10 27h1v1h-1zM17 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM23 27h1v1h-1zM27 27h1v1h-1zM0 28h1v1h-1zM1 28h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM16 28h1v1h-1zM17 28h1v1h-1zM20 28h1v1h-1zM22 28h1v1h-1zM27 28h1v1h-1z" fill="#0e0e11"/></svg></div><b>让自己被看见</b><span>xshuiai.github.io/be-seen</span><button class="pill" id="qrClose">收起</button></div></div>
+<div class="track" id="track"><div class="stage" id="stage"></div></div>
+<div class="cap"><div class="mono" id="capk">NOV 03 · 2026</div><b id="capt">让自己被看见</b></div>
+<div class="open-hint" id="hint"><span>点屏幕，展开这一站</span><i>⤢</i></div>
+<div class="dots" id="dots"></div>
+<div class="veil" id="veil"></div>
+
+<script>
+// ================= 内容（改内容只改这里） =================
+var CARDS = {
+  s1: [
+    {tag:"豆包工作小队", slug:"01-A", name:"大学生学业工作小队 · 找出我的长处",
+     p:"我是【年级】【专业】的学生。下面是我做过的事，不管大小：【课程作业、社团、兼职、比赛、爱好、帮别人解决过的问题】。\n请帮我找出：1）这些事里反复出现的 3 个长处；2）每个长处对应的具体例子；3）我自己可能没意识到的一个优势。只根据我写的内容，不要夸大。"},
+    {tag:"豆包对话", slug:"01-B", name:"一次只问一题的自我访谈",
+     p:"请当我的访谈者，帮我想清楚「我是谁」。一次只问一个问题，等我回答再问下一个，共 6 题：我最有成就感的一件事、别人常找我帮什么忙、我愿意花时间做的事、我讨厌的工作方式、我想被别人怎么介绍、三年后的我在做什么。最后用 3 句话总结我。"},
+    {tag:"进阶 · 技能", slug:"01-C", name:"小水校招求职助手：把经历整理成经历卡",
+     p:"装进豆包工作的技能。它一次只问 1—3 个问题，追问你在课程、社团、作品里本人做了什么，整理成经历卡，再接着做简历、投递、面试和复盘。不替你编造经历。\n安装：GitHub 下载 ZIP → 豆包工作「技能 → 上传技能」→ 在对话中试用。（目前只支持中文）",
+     link:"https://github.com/XshuiAi/shui-campus-career", nocopy:1}
+  ],
+  s2: [
+    {tag:"豆包对话", slug:"02-A", name:"同一个我，三种讲法",
+     p:"根据我的长处和例子：【粘贴上一步结果】，写三个版本的自我介绍，每个不超过 150 字：\n1）讲给面试官：突出能做什么、做成过什么；\n2）讲给可能找我帮忙的客户：突出能帮他解决什么；\n3）社交平台个人简介：让陌生人一眼记住我。\n只用我提供的事实。"},
+    {tag:"豆包伙伴", slug:"02-B", name:"校园offer收割机 · 1 分钟成长故事",
+     p:"帮我把经历讲成一个完整的故事，用在自我介绍里：我遇到了什么问题 → 我做了什么 → 结果怎样 → 我因此成为了什么样的人。1 分钟能讲完。只用我提供的事实。\n我的经历：【粘贴】"}
+  ],
+  s3: [
+    {tag:"作品 · 网页", slug:"03-A", name:"一页个人作品页",
+     p:"请帮我做一个手机上好看的单页 HTML 网页，作为我的个人作品页。内容：一句话介绍我、3 个长处和对应例子、2—3 个作品（名称、我做了什么、结果）、我正在找的机会。风格要有记忆点。不要放电话、身份证号等隐私，联系方式我自己填。\n我的材料：【粘贴前两步的结果】"},
+    {tag:"作品 · 简历", slug:"03-B", name:"中英文简历，内容一致",
+     p:"把我的经历做成一页中文简历，再做一份符合英文招聘习惯的英文简历（动词开头、一页、不放照片和年龄）。两份内容必须一致，拿不准的译法标出来问我。不要新增我没做过的事。\n我的经历：【粘贴】"},
+    {tag:"作品 · Skill", slug:"03-C", name:"把你的方法写成说明书",
+     p:"我擅长【某件事】。请帮我把做法拆成 5 步，写成一份别人照着就能做的说明，每一步写清：做什么、注意什么、做好的标准。"}
+  ],
+  s4: [
+    {tag:"豆包对话", slug:"04-A", name:"选一个展示的地方",
+     p:"我的长处是【长处】，作品是【作品】，想吸引的人是【招聘方 / 客户 / 同行 / 老师】。请帮我比较 3 个最适合我持续展示的地方（例如作品网页、某个内容平台、GitHub），说明各自适合被谁看到，并给我第一周的发布计划。"},
+    {tag:"豆包对话", slug:"04-B", name:"一条进展，怎么发",
+     p:"我这周做了：【做了什么】。请帮我写一条 100 字以内的进展分享：做了什么、遇到什么问题、学到什么、下周打算。语气真实，不夸张。"}
+  ],
+  s5: [
+    {tag:"豆包对话", slug:"05-A", name:"谁会需要我",
+     p:"我的长处是【长处】，做过的作品是【作品】。请从五类人里帮我各找 1—2 个具体的例子：需要我的组织、需要我的某个人、有同一个问题的一群人、和我有同样兴趣的人、能给我更好起点的老师或项目。每个例子说明：他们为什么需要我、我怎么让他们看到我、这周能做的第一步。"},
+    {tag:"豆包对话", slug:"05-B", name:"把一项能力变成一个小服务",
+     p:"我会【能力】，做过【作品】。请帮我设计一个大学生能做的小服务：帮谁解决什么问题、交付什么、大概多久完成、怎么找到第一个用户。先从免费帮 3 个人开始，帮我写一段邀请他们的话。"}
+  ]
+};
+var FLIPS = [["帮班里收作业、收材料","组织协调","能让一群人按时把事交齐"],["运营社团公众号","内容表达","知道读者想看什么"],["小组作业总是我做 PPT","把复杂讲清楚","能把信息变成别人看得懂的样子"],["奶茶店兼职","抗压与服务","高峰期也能稳住"],["爱剪旅行 vlog","审美与叙事","会挑画面、会讲故事"],["帮室友修电脑、装软件","解决问题","愿意查、愿意试"],["给外国同学当中文搭子","跨文化沟通","能在两种语言之间搭桥"],["自学用 AI 做了个小工具","动手与学习力","想到就能做出来"]];
+var TELLINGS = [
+  {k:"讲给面试官", who:"重点：能做什么、做成过什么", t:"我在学院公众号负责过 <mark>12 篇推文的选题和排版</mark>，其中一篇的阅读量是平时的 3 倍。这段经历让我确定，我擅长<mark>把信息讲清楚、让人愿意看</mark>，这也是我申请内容运营的原因。"},
+  {k:"讲给客户", who:"重点：能帮他解决什么", t:"你的店有活动，却不知道怎么发、发了也没人看？我可以<mark>把一次活动写成一篇有人愿意转发的推文</mark>，排好版，两天交稿。我写过 12 篇，有一篇阅读量翻了 3 倍。"},
+  {k:"讲给陌生人", who:"重点：一眼记住你", t:"<mark>把复杂的事写简单</mark>的人 · 写过 12 篇校园推文 · 正在练习用 AI 做内容 · 周末剪 vlog"}
+];
+var FORMS = [["简历","RESUME","给招聘方、HR 看","20 分钟",1],["一页作品网页","PORTFOLIO","发个链接，谁都能看","15 分钟",2],["复盘文章","WRITE-UP","给同行、老师看","30 分钟",2],["小工具","TOOL","给有同样问题的人用","1—2 小时",3],["Skill","METHOD","给想用你方法的人用","半天",4]];
+var OSS = [
+  ["简历","Reactive Resume","reactive-resume/reactive-resume","免费在线简历编辑器，多套模板，导出 PDF。","45k"],
+  ["简历","RenderCV","rendercv/rendercv","写一份文本，自动排成整齐的 PDF 简历。","18k"],
+  ["作品","First Contributions","firstcontributions/first-contributions","手把手完成第一次开源贡献，有简体中文教程。","57k"],
+  ["作品","Awesome for Beginners","MunGell/awesome-for-beginners","欢迎新手参与的开源项目清单，参与过就是作品。","91k"],
+  ["学 AI","Generative AI for Beginners","microsoft/generative-ai-for-beginners","微软 21 课生成式 AI 入门，有中文翻译。","123k"],
+  ["学 AI","Self LLM","datawhalechina/self-llm","Datawhale 中文开源大模型部署与微调教程。","33k"]
+];
+var WHO = [
+  {s:"一个组织", d:"公司、团队、老师的课题组。", tag:"求职 · 实习 · 内推", ex:"例：一家做内容的公司，需要会写推文的实习生。", first:"把作品页链接放进简历，发给一位学长学姐", at:[50,4]},
+  {s:"一个人", d:"某个人有具体的问题，愿意为你的能力付费。", tag:"接单 · 自由职业", ex:"例：学校门口的奶茶店，需要有人帮忙写活动推文。", first:"免费帮 3 个人做一次，换一句真实评价", at:[94,38]},
+  {s:"一群人", d:"很多人卡在同一个问题上，你把解法做成产品或服务。", tag:"一人公司 OPC", ex:"例：很多社团都不会排版，你做一套模板加教程。", first:"把你反复在做的事，写成流程或 Skill", at:[78,90]},
+  {s:"同好", d:"在一个领域持续分享，让人想到这件事就想到你。", tag:"内容 · 社群 · 开源", ex:"例：每周分享一个用 AI 做内容的小技巧。", first:"连续 4 周，每周发一次进展", at:[22,90]},
+  {s:"未来的你", d:"机会也可以是一个更好的起点。", tag:"读研 · 留学 · 比赛 · 科研", ex:"例：把作品集带进保研面试或留学申请。", first:"把作品页发给一位你想跟的老师或评委", at:[6,38]}
+];
+var ABIL = [["定义问题","知道自己要解决什么，而不是等别人布置。"],["判断与核实","AI 给的东西，你能分辨真假、好坏。"],["做出作品","把想法变成别人能看到、能用的东西。"],["讲好叙事","让别人理解你是谁、能做什么。"],["持续迭代","做出来、放出去、听反馈、再改一版。"]];
+var SKILLS = [["AI 与大数据",1],["网络与安全",1],["技术素养",1],["创造性思维"],["韧性、灵活与敏捷"],["好奇心与终身学习"]];
+
+// 8 块屏幕：k=小字标签，t=左下角标题，face=屏幕上的小界面，doc=点开后的完整内容
+var SCREENS = [
+  {id:"s0", k:"Cover", t:"让自己被看见", dark:1,
+   face:'<div class="blob" style="width:260px;height:260px;right:-40px;top:-60px;background:#ff5b35;opacity:.55"></div><div class="blob" style="width:200px;height:200px;right:120px;bottom:-90px;background:#6b6b74;opacity:.5"></div><div class="ui"><div class="k">Sherry小水 · 豆包工作校园课</div><h3 style="font-size:clamp(34px,5vw,54px);margin-top:auto;line-height:1.1">让自己<br>被看见。</h3><svg class="sig-s"><use href="#beseen"/></svg><p style="margin-top:10px">往下滚：一块屏幕，就是今天的一站。</p></div>',
+   doc:function(){ return '<div class="k">Cover · 开始之前</div><h2>简历只是你的<em>一面</em>。</h2><p class="lead">今天用豆包，把你做过的事，变成别人看得见的作品。一共五站，每一站都有现场实操和能直接复制的提示词。</p>'
+     + '<div class="blk"><h4>数据 <span>DATA</span></h4><div class="stat"><div class="n"><span class="cnt" data-to="1270">0</span><small>万人</small></div><p>2026 届全国普通高校毕业生预计 1270 万人，比上一届多 48 万。简历越来越像，所以要让别人看见「你」。<br><small style="color:var(--mute)">来源：教育部，2025 年 11 月公布</small></p></div></div>'
+     + '<div class="blk"><h4>怎么用这页 <span>HOW TO</span></h4><div class="flow"><span>豆包</span><em>→</em><span>工作伙伴·小队</span><em>→</em><span>求职与人事</span><em>→</em><span>点「召唤」</span><em>→</em><span>粘贴提示词</span></div><p class="note" style="font-size:13px;margin-top:12px">提示词里<b style="color:var(--acc)">橙色的【方括号】</b>换成你自己的内容。想要英文结果，在最后加一句：请用英文回答 / Reply in English。</p></div>'; }},
+  {id:"s1", k:"Stop 01 · Strengths", t:"我是谁",
+   face:'<div class="ui"><div class="k">01 · Strengths</div><h3>平常的事里，藏着你的<em>长处</em></h3><p>帮班里收材料，是组织协调；总是你做 PPT，是把复杂讲清楚。</p><div class="bubble">我做过 <b>【5 件小事】</b>，请找出 3 个反复出现的长处，不要夸大。</div><div class="reply">组织协调 · 把复杂讲清楚 · 抗压与服务……</div></div>',
+   doc:function(){ return '<div class="k">Stop 01 · Strengths</div><h2>我是谁：平常的事里，藏着你的<em>长处</em></h2><p class="lead">先别急着改简历。把做过的事都倒出来，课程、社团、兼职、爱好、帮别人解决过的问题都算。点卡片，看看一件小事背后是什么长处。</p>'
+     + '<div class="blk"><h4>一件小事 → 一个长处 <span>TAP TO FLIP</span></h4><div class="flips">' + FLIPS.map(function(f, i){ return '<button class="flip"><div class="in"><div class="a"><small>NO.0' + (i + 1) + '</small><b>' + f[0] + '</b><small>点一下翻面 ↻</small></div><div class="b"><small>长处</small><b>' + f[1] + '</b><span>' + f[2] + '</span></div></div></button>'; }).join("") + '</div></div>'
+     + steps(["在手机备忘录写下 <b>5 件</b>你做过的事，大小都算。","召唤「大学生学业工作小队」，粘贴下面第一条提示词。","挑出 <b>1 个</b>长处，后面的叙事和作品都围绕它。"], "约 3 分钟")
+     + prompts("s1"); }},
+  {id:"s2", k:"Stop 02 · Narrative", t:"我的叙事", dark:1,
+   face:'<div class="ui"><div class="k">02 · Narrative</div><h3>同一个我，<em>讲给不同的人</em></h3><p>事实不变，变的只是先讲什么。</p><div class="chips"><span class="on">讲给面试官</span><span>讲给客户</span><span>讲给陌生人</span></div><p style="margin-top:12px;color:#d5d5db;font-size:13.5px">「我负责过 12 篇推文的选题和排版，其中一篇阅读量是平时的 3 倍……」</p></div>',
+   doc:function(){ return '<div class="k">Stop 02 · Narrative</div><h2>我的叙事：同一个我，<em>讲给不同的人</em></h2><p class="lead">找工作，是讲给公司听；接单，是讲给客户听；发内容，是讲给陌生人听。事实不变，变的只是先讲什么。</p>'
+     + '<div class="blk"><h4>切换着看 <span>SWITCH</span></h4><div class="seg">' + TELLINGS.map(function(t, i){ return '<button data-tell="' + i + '"' + (i ? '' : ' class="on"') + '>' + t.k + '</button>'; }).join("") + '</div><div class="who" id="who">' + TELLINGS[0].who + '</div><div class="tell" id="tell">' + TELLINGS[0].t + '</div><p class="note">三段说的是同一件事：12 篇推文、一篇阅读量翻 3 倍。</p></div>'
+     + steps(["用上一步的长处，粘贴「三种讲法」提示词。","选一种念给同桌听，请对方<b>用一句话复述</b>你是谁。说不出来，就再改短一点。"], "约 2 分钟")
+     + prompts("s2"); }},
+  {id:"s3", k:"Stop 03 · Portfolio", t:"做出作品", mist:1,
+   face:'<div class="blob" style="width:300px;height:300px;left:-60px;bottom:-120px;background:#fff;opacity:.55"></div><div class="blob" style="width:220px;height:220px;right:-40px;top:-60px;background:#ff8a66;opacity:.45"></div><div class="ui"><div class="k" style="color:rgba(255,255,255,.75)">03 · Portfolio</div><h3 style="margin-top:auto">简历，只是作品的一种</h3><div class="strike" style="color:rgba(255,255,255,.7)">参与学院公众号运营。</div><div class="after">负责 12 篇推文的选题和排版，其中 1 篇阅读量是平时的 3 倍。</div></div>',
+   doc:function(){ return '<div class="k">Stop 03 · Portfolio</div><h2>做出作品：简历只是<em>其中一种</em></h2><p class="lead">作品，就是别人不用听你解释、自己就能看懂的东西。把右边的把手往左拖，看同一段经历写成作品前后的差别。</p>'
+     + '<div class="blk"><h4>改前 / 改后 <span>DRAG</span></h4><div class="ba"><div class="s s1"><div class="lb">BEFORE</div><div class="t">参与学院公众号运营。</div></div><div class="s s2" id="ba2"><div class="lb">AFTER</div><div class="t">负责 12 篇推文的选题和排版，其中 1 篇阅读量是平时的 3 倍；整理了一份排版模板，后来的同学一直在用。</div></div><div class="knob" id="knob"></div><input type="range" min="0" max="100" value="84" id="baR" aria-label="改前改后"></div><p class="note">改后的数字是示例，请换成你自己的真实数字。</p></div>'
+     + '<div class="blk"><h4>作品的五种形式 <span>FORMS</span></h4><div class="forms">' + FORMS.map(function(f){ var lv = ""; for (var i = 0; i < 4; i++) lv += '<i class="' + (i < f[4] ? 'on' : '') + '"></i>'; return '<div class="fm"><small>' + f[1] + '</small><b>' + f[0] + '</b><span>' + f[2] + '</span><small style="letter-spacing:.04em">' + f[3] + '</small><div class="lv">' + lv + '</div></div>'; }).join("") + '</div></div>'
+     + steps(["粘贴「一页作品页」提示词，把前两步的长处和叙事一起发给豆包。","在手机上打开生成的网页，问自己：<b>陌生人第一眼能看懂我吗？</b>"], "约 5 分钟")
+     + prompts("s3"); }},
+  {id:"s4", k:"Stop 04 · Visibility", t:"展示出来",
+   face:'<div class="ui"><div class="k">04 · Visibility</div><h3>一个固定的地方，<em>持续发光</em></h3><p>作品页、内容平台、GitHub，选一个，每周更新一次。</p><div class="repos"><div><b>Reactive Resume</b><span>★ 45k · 简历</span></div><div><b>First Contributions</b><span>★ 57k · 作品</span></div><div><b>Self LLM</b><span>★ 33k · 学 AI</span></div></div></div>',
+   doc:function(){ return '<div class="k">Stop 04 · Visibility</div><h2>展示出来：一个固定的地方，<em>持续发光</em></h2><p class="lead">不一定要做网站。关键是有一个别人能找到你的固定地方，持续放作品和进展。参与开源项目，本身也是一件作品。</p>'
+     + prompts("s4")
+     + '<div class="blk"><h4>开源项目 <span>2026-11-03 在 GitHub 核对过</span></h4><div class="filter">' + ["全部","简历","作品","学 AI"].map(function(u, i){ return '<button data-use="' + u + '"' + (i ? '' : ' class="on"') + '>' + u + '</button>'; }).join("") + '</div><div class="oss" id="oss"></div><p class="note">校园网打开 GitHub 可能较慢。发布任何内容前，遮掉电话、证件号等隐私。</p></div>'; }},
+  {id:"s5", k:"Stop 05 · Opportunity", t:"机会找到我", dark:1,
+   face:'<div class="ui"><div class="k">05 · Opportunity</div><h3>谁会<em>需要</em>我？</h3><p style="max-width:300px">机会 = 有人需要你会的事 × 他知道你会。</p><div class="chips" style="max-width:300px"><span class="on">一个组织</span><span>一个人</span><span>一群人</span><span>同好</span><span>未来的你</span></div></div><div class="radar"><div class="sweep"></div><i style="left:50%;top:6%"></i><i style="left:94%;top:40%"></i><i style="left:76%;top:90%"></i><i style="left:22%;top:88%"></i><i style="left:6%;top:38%"></i></div>',
+   doc:function(){ return '<div class="k">Stop 05 · Opportunity</div><h2>机会找到我：先问「<em>谁会需要我</em>」</h2><p class="lead">作品负责「让人知道」。剩下的问题是：谁会需要你？答案不止一种。点一点，同一份作品，可以同时被这五类人看到。</p>'
+     + '<div class="blk"><div class="formula"><span>机会</span><i>=</i><span>有人需要你会的事</span><i>×</i><span class="hl">他知道你会</span></div>'
+     + '<div class="whomap"><div class="orbit"><div class="me">你</div>' + WHO.map(function(w, i){ return '<button data-who="' + i + '" style="left:' + w.at[0] + '%;top:' + w.at[1] + '%"' + (i ? '' : ' class="on"') + '>' + w.s + '</button>'; }).join("") + '</div><div class="detail" id="detail"></div></div></div>'
+     + prompts("s5")
+     + '<p class="note" style="margin-top:24px">改简历、模拟面试：今天招聘会现场有专人服务。课后也可以在豆包召唤「校园offer收割机」「AI 面试陪练官」「校招面试通关教练」继续练。</p>'; }},
+  {id:"s6", k:"AI Era", t:"AI 时代的能力",
+   face:'<div class="ui"><div class="k">06 · AI-era skills</div><h3>AI 替不了你的<em>五件事</em></h3><div style="display:flex;align-items:flex-end;gap:24px;margin-top:auto"><div><div class="bignum">39%</div><p>到 2030 年核心技能会变</p></div><div class="minibars" style="flex:1"><div>新增<i style="--v:100%"></i>1.7 亿</div><div>被替代<i style="--v:54%"></i>0.92 亿</div><div>净增<i style="--v:46%"></i>0.78 亿</div></div></div></div>',
+   doc:function(){ return '<div class="k">AI Era</div><h2>AI 时代，什么<em>能力</em>更重要</h2><p class="lead">AI 能替你写、替你做的越来越多。回头看今天这条线，真正要靠你自己的，是这五件事。</p>'
+     + '<div class="blk"><div class="abil">' + ABIL.map(function(a, i){ return '<div><i>0' + (i + 1) + '</i><b>' + a[0] + '</b><span>' + a[1] + '</span></div>'; }).join("") + '</div></div>'
+     + '<div class="blk"><h4>数据 <span>WEF FUTURE OF JOBS 2025</span></h4><div class="charts"><div class="chart"><h5>到 2030 年，核心技能会变</h5><p class="c2">雇主预计劳动者核心技能发生变化的比例</p><div class="donut"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="#f1f1f3" stroke-width="12"/><circle class="arc" id="arc" cx="60" cy="60" r="48" fill="none" stroke="#ff5b35" stroke-width="12" stroke-linecap="round" transform="rotate(-90 60 60)" stroke-dasharray="301.6" stroke-dashoffset="301.6"/><text x="60" y="67" text-anchor="middle" font-size="24" font-weight="700" font-family="Menlo,monospace" fill="#0e0e11"><tspan class="cnt" data-to="39">0</tspan>%</text></svg><p>接近四成。会用 AI 只是起点，<b style="color:var(--ink)">能持续学、持续改</b>才是关键。</p></div></div>'
+     + '<div class="chart"><h5>岗位在消失，也在出现</h5><p class="c2">全球 2025—2030 年预计变化</p><div class="bars"><div class="r"><span>新增</span><div class="tk"><div class="fl" data-w="100"></div></div><b>1.7 亿</b></div><div class="r"><span>被替代</span><div class="tk"><div class="fl" data-w="54"></div></div><b>0.92 亿</b></div><div class="r"><span>净增</span><div class="tk"><div class="fl" data-w="46" style="background:#c9c9cf"></div></div><b>0.78 亿</b></div></div><div class="skills">' + SKILLS.map(function(s){ return '<span class="' + (s[1] ? 'hot' : '') + '">' + s[0] + '</span>'; }).join("") + '</div></div></div>'
+     + '<p class="note">数据：世界经济论坛《2025 未来就业报告》，调查覆盖 1000 多家雇主、55 个经济体。黑色标签是增长最快的三项技能。</p></div>'; }},
+  {id:"s7", k:"The End", t:"让自己被看见", dark:1,
+   face:'<div class="blob" style="width:240px;height:240px;left:40%;top:-110px;background:#ff5b35;opacity:.45"></div><div class="ui"><div class="k">The end · 写给你</div><h3 style="margin-top:auto;font-size:clamp(22px,3vw,32px);line-height:1.4">比被挑选更重要的，<br>是你能做出点什么，<em>并让人看见。</em></h3><svg class="sig-s" style="fill:#fff;width:120px;height:44px"><use href="#sherry"/></svg></div>',
+   doc:function(){ return '<div class="k">The End</div><p class="lead" style="margin-top:12px">没找到工作，不等于失败。简历，只是讲述自己的一种方式。</p><div class="endq">比被挑选更重要的，<br>是你能<em>做出点什么</em>，并让人看见。</div>'
+     + '<div class="label"><h5>配料表<small>INGREDIENTS</small></h5><div><b>配料：</b>长处、叙事、作品、一个固定的展示位、AI（适量）</div><table><tr><td>营养成分</td><td>每份</td></tr><tr><td>真实经历</td><td>100%</td></tr><tr><td>编造经历</td><td>0%</td></tr><tr><td>被看见的机会</td><td>↑↑↑</td></tr></table><div><b>保质期：</b>持续迭代中　<b>出品：</b>Sherry小水</div><div class="w">注意：本品不替你编经历。合上这页，马上动手做一件作品。</div></div>'
+     + '<div class="signoff"><span style="color:var(--mute);font-size:20px">—</span><svg aria-label="Sherry"><use href="#sherry"/></svg><b>小水</b></div>'
+     + '<p class="src">数据来源：<a href="https://m.gmw.cn/2025-11/20/content_1304232603.htm" target="_blank" rel="noopener">教育部 2026 届毕业生规模（光明网）</a> · <a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/" target="_blank" rel="noopener">WEF Future of Jobs Report 2025</a></p>'; }}
+];
+
+// ================= 小工具 =================
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function steps(list, time){ return '<div class="blk"><h4>现场实操 <span>' + time + '</span></h4><ol class="steps">' + list.map(function(x){ return '<li>' + x + '</li>'; }).join("") + '</ol></div>'; }
+function prompts(k){
+  return '<div class="blk"><h4>复制提示词 <span>PROMPTS</span></h4><div class="prompts">' + CARDS[k].map(function(c, i){
+    return '<div class="pc"><div class="ph"><i></i><i></i><i></i>' + c.slug + '<span>' + c.tag + '</span></div><div class="pb"><h5>' + c.name + '</h5><pre>' + esc(c.p).replace(/【[^】]*】/g, function(m){ return '<span class="ph2">' + m + '</span>'; }) + '</pre><div class="row2">'
+      + (c.nocopy ? '' : '<button class="cp" data-k="' + k + '" data-i="' + i + '">复制提示词</button>')
+      + (c.link ? '<a class="cp' + (c.nocopy ? '' : ' ghost') + '" href="' + c.link + '" target="_blank" rel="noopener">打开 GitHub ↗</a>' : '') + '</div></div></div>';
+  }).join("") + '</div></div>';
+}
+function copyText(text, btn){
+  var label = btn.textContent;
+  var ok = function(){ btn.textContent = "已复制 ✓"; btn.classList.add("done"); setTimeout(function(){ btn.textContent = label; btn.classList.remove("done"); }, 1500); };
+  var fb = function(t){ var ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (x) {} ta.remove(); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(ok, function(){ fb(text); ok(); }); else { fb(text); ok(); }
+}
+function countUp(el){ var to = +el.dataset.to, t0 = performance.now(); (function f(t){ var p = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(f); })(t0); }
+
+// ================= 舞台：搭屏幕 =================
+var stage = $("stage"), track = $("track"), els = [];
+track.style.height = (SCREENS.length * 90 + 10) + "vh";
+SCREENS.forEach(function(s, i){
+  var el = document.createElement("div");
+  el.className = "scr" + (s.dark ? " dark" : "") + (s.mist ? " mist" : "");
+  el.innerHTML = '<div class="shadow"></div>'
+    + '<div class="face fr"><div class="wbar"><i></i><i></i><i></i>' + s.k + '<span>' + pad(i) + ' / ' + pad(SCREENS.length - 1) + '</span></div>'
+    + '<div class="glass" data-open="' + i + '">' + s.face + '<div class="open">⤢ 点开</div></div></div>';
+  stage.appendChild(el); els.push(el);
+});
+$("nlinks").innerHTML = SCREENS.map(function(s, i){ return '<a href="#" data-go="' + i + '">' + pad(i) + '</a>'; }).join("");
+$("dots").innerHTML = SCREENS.map(function(s, i){ return '<button data-go="' + i + '" aria-label="' + s.t + '"></button>'; }).join("");
+var navs = document.querySelectorAll("#nlinks a"), dots = document.querySelectorAll("#dots button"), cur = -1, P = 0;
+
+function goTo(i){
+  var max = track.offsetHeight - innerHeight;
+  scrollTo({top: track.offsetTop + i / (SCREENS.length - 1) * max, behavior: "smooth"});
+}
+
+// 滚动 → 每块屏幕的姿态：没到的藏在下面，当前的正对你，过去的翻平叠到上面
+function render(){
+  var max = track.offsetHeight - innerHeight, raw = Math.max(0, Math.min(1, (scrollY - track.offsetTop) / Math.max(1, max)));
+  P = raw * (SCREENS.length - 1);
+  $("progress").style.width = (raw * 100) + "%";
+  var H = els[0].offsetHeight || 400;
+  els.forEach(function(el, i){
+    var d = i - P, rx, ty, tz = 0, sc = 1, op = 1;
+    if (d >= 1) { rx = -80; ty = H * .9; op = 0; }
+    else if (d > 0) { rx = -80 * d; ty = H * .9 * d; op = 1 - d * .7; }
+    else {
+      var a = Math.min(1, -d), b = Math.max(0, -d - 1), bb = Math.min(b, 4);
+      rx = 76 * a; ty = -(H * .62 * a + bb * 26); tz = -bb * 30; sc = 1 - bb * .03; op = b > 3.5 ? Math.max(0, 1 - (b - 3.5) * 2) : 1;
+    }
+    el.style.transform = "translate3d(0," + ty.toFixed(1) + "px," + tz.toFixed(1) + "px) rotateX(" + rx.toFixed(2) + "deg) scale(" + sc.toFixed(3) + ")";
+    el.style.opacity = op.toFixed(3);
+    el.style.zIndex = 100 - Math.round(Math.abs(d) * 10);
+    var front = Math.abs(d) < .35;
+    el.style.pointerEvents = front ? "auto" : "none";
+    el.classList.toggle("front", front);
+  });
+  var c = Math.round(P);
+  if (c !== cur) {
+    if (cur !== -1 && AC) SFX.flip();
+    cur = c;
+    navs.forEach(function(a, i){ a.classList.toggle("on", i === c); });
+    dots.forEach(function(a, i){ a.classList.toggle("on", i === c); });
+    $("capk").textContent = c === 0 ? "NOV 03 · 2026 · 对外经贸大学" : SCREENS[c].k;
+    $("capt").textContent = SCREENS[c].t;
+  }
+  $("hint").style.opacity = Math.abs(P - Math.round(P)) < .2 ? 1 : 0;
+}
+addEventListener("scroll", render, {passive:true});
+addEventListener("resize", render);
+render();
+
+// ================= 点开：屏幕放大成全屏 =================
+var veil = $("veil"), sheet = null, openIdx = -1;
+function fullRect(){
+  var m = innerWidth < 820, w = m ? innerWidth : Math.min(1080, innerWidth - 80), h = m ? innerHeight : innerHeight - 64;
+  return {left: (innerWidth - w) / 2, top: m ? 0 : 32, width: w, height: h};
+}
+function setRect(el, r){ el.style.left = r.left + "px"; el.style.top = r.top + "px"; el.style.width = r.width + "px"; el.style.height = r.height + "px"; }
+function openScreen(i){
+  if (sheet) return;
+  openIdx = i;
+  var s = SCREENS[i], r = els[i].querySelector(".glass").getBoundingClientRect();
+  sheet = document.createElement("div"); sheet.className = "sheet";
+  sheet.innerHTML = '<div class="sbar"><button class="tl" data-close aria-label="关闭"></button><button class="tl"></button><button class="tl"></button>' + s.k + '<button class="close" data-close>ESC · 收起</button></div><div class="sbody"><div class="doc">' + s.doc() + '</div></div>';
+  setRect(sheet, {left: r.left, top: r.top, width: r.width, height: r.height}); sheet.style.borderRadius = "9px";
+  document.body.appendChild(sheet);
+  document.body.style.overflow = "hidden";
+  veil.classList.add("on"); SFX.open();
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ if (!sheet) return; setRect(sheet, fullRect()); sheet.style.borderRadius = innerWidth < 820 ? "0" : "16px"; }); });
+  setTimeout(function(){ if (!sheet) return; sheet.classList.add("ready"); wire(i); }, 260);
+}
+function closeScreen(){
+  if (!sheet) return;
+  var sh = sheet; sheet = null;
+  sh.classList.remove("ready");
+  var r = els[openIdx].querySelector(".glass").getBoundingClientRect();
+  setRect(sh, {left: r.left, top: r.top, width: r.width, height: r.height}); sh.style.borderRadius = "9px";
+  veil.classList.remove("on"); SFX.close();
+  setTimeout(function(){ sh.style.opacity = 0; }, 420);
+  setTimeout(function(){ sh.remove(); document.body.style.overflow = ""; }, 720);
+}
+veil.addEventListener("click", closeScreen);
+addEventListener("keydown", function(e){
+  if (e.key === "Escape") { closeScreen(); return; }
+  if (sheet) return;
+  if (e.key === "Enter") openScreen(Math.round(P));
+  if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === "ArrowRight") { e.preventDefault(); goTo(Math.min(SCREENS.length - 1, Math.round(P) + 1)); }
+  if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "ArrowLeft") { e.preventDefault(); goTo(Math.max(0, Math.round(P) - 1)); }
+});
+
+// 点开后各站的交互
+function wire(i){
+  var root = sheet, id = SCREENS[i].id;
+  root.querySelectorAll(".cnt").forEach(countUp);
+  if (id === "s4") renderOss("全部");
+  if (id === "s5") showWho(0);
+  if (id === "s6") setTimeout(function(){ var a = root.querySelector("#arc"); if (a) a.style.strokeDashoffset = (301.6 * .61).toFixed(1); root.querySelectorAll(".fl").forEach(function(f){ f.style.width = f.dataset.w + "%"; }); }, 200);
+  var r = root.querySelector("#baR");
+  if (r) r.addEventListener("input", function(){ root.querySelector("#ba2").style.clipPath = "inset(0 0 0 " + this.value + "%)"; root.querySelector("#knob").style.left = this.value + "%"; });
+}
+function renderOss(u){
+  if (!sheet) return;
+  sheet.querySelectorAll("[data-use]").forEach(function(b){ b.classList.toggle("on", b.dataset.use === u); });
+  sheet.querySelector("#oss").innerHTML = OSS.filter(function(o){ return u === "全部" || o[0] === u; }).map(function(o){
+    return '<a href="https://github.com/' + o[2] + '" target="_blank" rel="noopener"><span class="u">' + o[0] + '</span><b>' + o[1] + '</b><p>' + o[3] + '</p><span class="st">★ ' + o[4] + '</span></a>';
+  }).join("");
+}
+function showWho(i){
+  if (!sheet) return;
+  sheet.querySelectorAll("[data-who]").forEach(function(b, j){ b.classList.toggle("on", j === i); });
+  var w = WHO[i], d = sheet.querySelector("#detail");
+  d.classList.add("out");
+  setTimeout(function(){ d.innerHTML = '<small>' + w.tag + '</small><h5>' + w.s + '需要你</h5><p>' + w.d + '</p><p style="color:var(--ink)">' + w.ex + '</p><div class="first">' + w.first + '</div>'; d.classList.remove("out"); }, 160);
+}
+
+// ================= 声音：背景音乐（网页实时合成，不用音频文件、没有版权问题）+ 点击音效 =================
+var AC = null, master = null, bgm = null, bgmOn = false;
+function ac(){
+  if (!AC) { var C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); master = AC.createGain(); master.gain.value = .9; master.connect(AC.destination); }
+  if (AC.state === "suspended") AC.resume();
+  return AC;
+}
+// 一个短音：频率、时长、音色、音量、延迟
+function tone(f, dur, type, vol, delay){
+  var a = AC; if (!a || a.state !== "running") return;
+  var t = a.currentTime + (delay || 0), o = a.createOscillator(), g = a.createGain();
+  o.type = type || "sine"; o.frequency.setValueAtTime(f, t);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol || .08, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + .05);
+}
+var SFX = {
+  flip: function(){ tone(1400, .05, "triangle", .035); tone(900, .07, "sine", .03, .03); },
+  open: function(){ tone(523, .18, "sine", .07); tone(784, .26, "sine", .06, .07); tone(1047, .3, "sine", .03, .14); },
+  close: function(){ tone(784, .16, "sine", .06); tone(523, .24, "sine", .05, .07); },
+  tap: function(){ tone(1046, .07, "triangle", .05); },
+  copy: function(){ tone(880, .08, "sine", .06); tone(1318, .16, "sine", .05, .06); }
+};
+// 背景音乐：慢速四个和弦铺底 + 稀疏的音点，8 秒一小节循环
+var CHORDS = [[261.6,329.6,392,493.9],[220,261.6,329.6,392],[174.6,220,261.6,329.6],[196,246.9,293.7,392]];
+function startBgm(){
+  var a = ac(); if (!a) return;
+  var out = a.createGain(); out.gain.value = 0; out.connect(master);
+  var lp = a.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1300; lp.connect(out);
+  out.gain.linearRampToValueAtTime(.55, a.currentTime + 2.5);
+  var step = 0, timer;
+  function pad(ch){
+    var t = a.currentTime;
+    ch.forEach(function(f, i){
+      [-4, 4].forEach(function(det){
+        var o = a.createOscillator(), g = a.createGain();
+        o.type = i ? "sine" : "triangle"; o.frequency.value = f / 2; o.detune.value = det;
+        g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.025, t + 1.8); g.gain.linearRampToValueAtTime(.022, t + 6); g.gain.linearRampToValueAtTime(0, t + 8.6);
+        o.connect(g); g.connect(lp); o.start(t); o.stop(t + 8.8);
+      });
+    });
+  }
+  function pluck(f, d){
+    var t = a.currentTime + d, o = a.createOscillator(), g = a.createGain();
+    o.type = "sine"; o.frequency.value = f * 2;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.03, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
+    o.connect(g); g.connect(lp); o.start(t); o.stop(t + 1.7);
+  }
+  function bar(){
+    var ch = CHORDS[step % CHORDS.length]; step++;
+    pad(ch);
+    [0, 1, 2, 3, 5, 6].forEach(function(beat){ if (Math.random() < .55) pluck(ch[Math.floor(Math.random() * ch.length)], beat * 1.33); });
+  }
+  bar(); timer = setInterval(bar, 8000);
+  bgm = {stop: function(){ clearInterval(timer); var t = a.currentTime; out.gain.cancelScheduledValues(t); out.gain.setValueAtTime(out.gain.value, t); out.gain.linearRampToValueAtTime(0, t + 1.2); setTimeout(function(){ out.disconnect(); }, 1400); }};
+}
+$("bgmBtn").addEventListener("click", function(){
+  bgmOn = !bgmOn; this.classList.toggle("on", bgmOn); this.setAttribute("aria-pressed", bgmOn);
+  if (bgmOn) startBgm(); else if (bgm) { bgm.stop(); bgm = null; }
+});
+// 浏览器规定要先有一次点击才能出声：第一次点页面任何地方，就把音效打开
+addEventListener("pointerdown", function(){ ac(); }, {once:true});
+
+// ================= 二维码：默认藏起来，点按钮才展示 =================
+function qr(on){ $("qrwrap").classList.toggle("on", on); $("qrwrap").setAttribute("aria-hidden", !on); $("qrBtn").classList.toggle("on", on); SFX.tap(); }
+$("qrBtn").addEventListener("click", function(){ qr(!$("qrwrap").classList.contains("on")); });
+$("qrClose").addEventListener("click", function(){ qr(false); });
+$("qrwrap").addEventListener("click", function(e){ if (e.target === this) qr(false); });
+
+document.addEventListener("click", function(e){
+  var t;
+  if ((t = e.target.closest("[data-open]")) && !sheet) { openScreen(+t.dataset.open); return; }
+  if ((t = e.target.closest("[data-close]"))) { closeScreen(); return; }
+  if ((t = e.target.closest("[data-go]"))) { e.preventDefault(); if (sheet) closeScreen(); goTo(+t.dataset.go); return; }
+  if (e.target.closest("#home")) { e.preventDefault(); goTo(0); return; }
+  if (!sheet) return;
+  if ((t = e.target.closest(".cp[data-k]"))) { copyText(CARDS[t.dataset.k][+t.dataset.i].p, t); SFX.copy(); return; }
+  if ((t = e.target.closest(".flip"))) { t.classList.toggle("on"); SFX.tap(); return; }
+  if ((t = e.target.closest("[data-tell]"))) {
+    var k = +t.dataset.tell, tell = sheet.querySelector("#tell"); SFX.tap();
+    sheet.querySelectorAll("[data-tell]").forEach(function(b, j){ b.classList.toggle("on", j === k); });
+    tell.classList.add("out"); setTimeout(function(){ tell.innerHTML = TELLINGS[k].t; sheet.querySelector("#who").textContent = TELLINGS[k].who; tell.classList.remove("out"); }, 200);
+    return;
+  }
+  if ((t = e.target.closest("[data-use]"))) { renderOss(t.dataset.use); return; }
+  if ((t = e.target.closest("[data-who]"))) { showWho(+t.dataset.who); SFX.tap(); return; }
+});
+</script>
+</body>
+</html>
